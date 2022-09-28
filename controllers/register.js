@@ -39,7 +39,7 @@ module.exports.register = async(req, res) => {
 
         await otpToken.save()
 
-        const link = `http://localhost:3030/register/new/user?id=${registerUser._id}&token=${otp}&token_request_validation=true`
+        const link = `http://localhost:3030/api/v1/register/validation/user?id=${registerUser._id}&token=${otp}&token_request_validation=true`
 
         res.status(200).send({
             status: 'success',
@@ -68,7 +68,7 @@ module.exports.validateToken = async(req, res) => {
 
         if (tokenValidation === false) {
 
-            res.status(400).send({
+            return res.status(400).send({
                 status: "fail",
                 message: 'validation error, please try again',
             })
@@ -80,7 +80,7 @@ module.exports.validateToken = async(req, res) => {
 
         if (!foundUser || !foundToken) {
 
-            res.status(400).send({
+            return res.status(400).send({
                 status: "fail",
                 message: 'cannot find user or validation token, please try again',
             })

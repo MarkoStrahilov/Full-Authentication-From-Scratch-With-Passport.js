@@ -49,10 +49,63 @@ module.exports.signIn = async(req, res, next) => {
 
     } catch (error) {
 
-        return res.status(401).send({
+        return res.status(400).send({
             status: 'fail',
             message: error.message,
         });
 
     }
+}
+
+module.exports.signOut = async(req, res, next) => {
+
+    try {
+
+        const { request_for_logout } = req.query
+
+        const requestForLogout = request_for_logout.toLowerCase() == 'true' ? true : false
+
+        if (requestForLogout === false) {
+
+            return res.status(400).send({
+                status: "fail",
+                message: 'request for logging out failed,please try again',
+            })
+
+        }
+
+        const foundUser = await User.findOne({ _id: req.user.id })
+
+        if (!foundUser) {
+
+            return res.status(404).send({
+                status: 'fail',
+                message: "user is not logged in yet, or does not exist",
+            });
+
+        }
+
+        req.logout(function(err) {
+
+            if (err) return next(err);
+
+            return res.status(200).send({
+                status: 'success',
+                message: 'successfuly logged out'
+            })
+
+        });
+
+
+    } catch (error) {
+
+
+        return res.status(400).send({
+            status: 'fail',
+            message: error.message,
+        });
+
+
+    }
+
 }
