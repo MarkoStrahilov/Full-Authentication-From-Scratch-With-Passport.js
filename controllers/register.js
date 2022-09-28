@@ -6,7 +6,6 @@ const bcrypt = require('bcrypt')
 module.exports.register = async(req, res) => {
     try {
 
-
         const { username, password, email } = req.body
         const newUser = new User({ email, username })
         const registerUser = await User.register(newUser, password)
@@ -77,16 +76,17 @@ module.exports.validateToken = async(req, res) => {
 
         if (!validToken) return new CustomError('wrong token, please try again')
 
+        await User.updateOne(foundUser, { $set: { isVerified: true } }, { runValidators: true })
+        await foundUser.save()
+
+        await Token.deleteMany({ _id: foundToken._id })
+
         res.status(200).send({
             status: "success",
             message: "auth token valid",
             data: { id, token, requestForValidation }
         })
 
-        await User.updateOne(foundUser, { $set: { isVerified: true } }, { runValidators: true })
-        await foundUser.save()
-
-        await Token.deleteMany({ _id: foundToken._id })
 
     } catch (error) {
 
