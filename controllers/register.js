@@ -5,7 +5,6 @@ const bcrypt = require('bcrypt')
 module.exports.register = async(req, res) => {
     try {
 
-
         const { username, password, email } = req.body
 
         if (!username || !password || !email) {
@@ -112,16 +111,17 @@ module.exports.validateToken = async(req, res) => {
 
         }
 
+        await User.updateOne(foundUser, { $set: { isVerified: true } }, { runValidators: true })
+        await foundUser.save()
+
+        await Token.deleteMany({ _id: foundToken._id })
+
         res.status(200).send({
             status: "success",
             message: "auth token valid",
             data: { id, token, requestForValidation }
         })
 
-        await User.updateOne(foundUser, { $set: { isVerified: true } }, { runValidators: true })
-        await foundUser.save()
-
-        await Token.deleteMany({ _id: foundToken._id })
 
     } catch (error) {
 

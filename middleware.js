@@ -3,3 +3,10 @@ module.exports.asyncErrorHandle = (fn) => {
         fn(req, res).catch(e => next(e))
     }
 }
+
+module.exports.isLoggedIn = async(req, res, next) => {
+    if (!req.isAuthenticated()) {
+        return res.redirect('/sign-in')
+    }
+    next()
+}
