@@ -116,7 +116,7 @@ module.exports.validateToken = async(req, res) => {
 
         await Token.deleteMany({ _id: foundToken._id })
 
-        res.status(200).send({
+        return res.status(200).send({
             status: "success",
             message: "auth token valid",
             data: { id, token, requestForValidation }
