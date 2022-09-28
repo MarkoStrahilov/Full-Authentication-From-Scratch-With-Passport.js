@@ -5,8 +5,14 @@ module.exports.asyncErrorHandle = (fn) => {
 }
 
 module.exports.isLoggedIn = async(req, res, next) => {
+
     if (!req.isAuthenticated()) {
-        return res.redirect('/sign-in')
+
+        return res.status(401).send({
+            status: 'fail',
+            message: "Unauthorized, please sign in or register a new account"
+        })
+
     }
     next()
 }
