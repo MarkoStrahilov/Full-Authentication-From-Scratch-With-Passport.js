@@ -1,14 +1,31 @@
 const User = require('../models/user')
 const Token = require('../models/otpToken')
-const CustomError = require('../CustomError')
 const bcrypt = require('bcrypt')
 
 module.exports.register = async(req, res) => {
     try {
 
         const { username, password, email } = req.body
+
+        if (!username || !password || !email) {
+
+            res.status(400).send({
+                status: 'fail',
+                message: "please provide your information in order to proceed"
+            })
+
+        }
+
         const newUser = new User({ email, username })
         const registerUser = await User.register(newUser, password)
+
+        if (!registerUser || !newUser) {
+
+            res.status(400).send({
+                status: 'fail',
+                message: "something went wrong please try again"
+            })
+        }
 
         const otp = `${Math.floor(Math.random() * 1000000000000000)}`
         const hashedOtp = await bcrypt.hash(otp, 12)
@@ -61,7 +78,14 @@ module.exports.validateToken = async(req, res) => {
         const foundUser = await User.findOne({ _id: id })
         const foundToken = await Token.findOne({ userId: foundUser._id })
 
-        if (!foundUser || !foundToken) return new CustomError('cannot find user or validation toke, please try again')
+        if (!foundUser || !foundToken) {
+
+            res.status(400).send({
+                status: "fail",
+                message: 'cannot find user or validation token, please try again',
+            })
+
+        }
 
         const expirationDate = foundToken.expiresAt
 
@@ -69,12 +93,23 @@ module.exports.validateToken = async(req, res) => {
 
             await Token.deleteMany({ _id: foundToken._id })
 
-            return new CustomError('validation token has been expired')
+            return res.status(400).send({
+                status: "fail",
+                message: 'validation token has been expired, please request a new one',
+            })
+
         }
 
         const validToken = await bcrypt.compare(token, foundToken.otpSecret)
 
-        if (!validToken) return new CustomError('wrong token, please try again')
+        if (!validToken) {
+
+            return res.status(400).send({
+                status: "fail",
+                message: 'incorrect validation token, please try again',
+            })
+
+        }
 
         await User.updateOne(foundUser, { $set: { isVerified: true } }, { runValidators: true })
         await foundUser.save()
