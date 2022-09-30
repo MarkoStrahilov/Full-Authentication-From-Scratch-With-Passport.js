@@ -1,5 +1,4 @@
 const User = require('../models/user')
-const Token = require('../models/otpToken')
 const passport = require('passport');
 
 module.exports.signIn = async(req, res, next) => {
@@ -14,7 +13,7 @@ module.exports.signIn = async(req, res, next) => {
 
                 return res.status(404).send({
                     status: 'fail',
-                    message: "User doesn't exist"
+                    message: "User doesn't exist or invalid log in data"
                 });
 
             }

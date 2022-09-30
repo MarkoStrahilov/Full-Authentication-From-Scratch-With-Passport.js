@@ -9,7 +9,7 @@ module.exports.register = async(req, res) => {
 
         if (!username || !password || !email) {
 
-            res.status(400).send({
+            return res.status(400).send({
                 status: 'fail',
                 message: "please provide your information in order to proceed"
             })
@@ -57,12 +57,21 @@ module.exports.register = async(req, res) => {
     }
 }
 
-module.exports.validateToken = async(req, res) => {
+module.exports.validateToken = async(req, res, next) => {
 
     try {
 
         const { id, token } = req.query
         const requestForValidation = req.query.token_request_validation
+
+        if (!id || !token || !requestForValidation) {
+
+            return res.status(400).send({
+                status: 'fail',
+                message: 'missing valid credentials',
+            });
+
+        }
 
         const tokenValidation = requestForValidation.toLowerCase() == 'true' ? true : false
 
@@ -82,7 +91,16 @@ module.exports.validateToken = async(req, res) => {
 
             return res.status(400).send({
                 status: "fail",
-                message: 'cannot find user or validation token, please try again',
+                message: 'cannot find user or validation token has expired, please try again',
+            })
+
+        }
+
+        if (foundUser.isVerified === true) {
+
+            return res.status(406).send({
+                status: "fail",
+                message: 'account has already been verified',
             })
 
         }
@@ -116,10 +134,16 @@ module.exports.validateToken = async(req, res) => {
 
         await Token.deleteMany({ _id: foundToken._id })
 
-        return res.status(200).send({
-            status: "success",
-            message: "auth token valid",
-            data: { id, token, requestForValidation }
+        req.login(foundUser, function(err) {
+
+            if (err) { return next(err); }
+
+            return res.status(200).send({
+                status: "success",
+                message: "auth token valid",
+                data: { id, token, requestForValidation }
+            })
+
         })
 
 
