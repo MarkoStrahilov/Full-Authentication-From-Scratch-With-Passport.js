@@ -1,2 +1,2 @@
-# Full Authentication From Scratch With Passport.js
+# Full Authentication With Passport.js
  
