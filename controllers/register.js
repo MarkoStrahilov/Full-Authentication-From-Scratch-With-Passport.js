@@ -16,6 +16,24 @@ module.exports.register = async(req, res) => {
 
         }
 
+        if (password.length <= 7 || password.indexOf(" ") !== -1) {
+
+            return res.status(400).send({
+                status: "fail",
+                message: 'password must be longer then 6 characters and should not contain any spaces',
+            })
+
+        }
+
+        if (password.indexOf(" ") !== -1) {
+
+            return res.status(400).send({
+                status: "fail",
+                message: 'password',
+            })
+
+        }
+
         const newUser = new User({ email, username })
         const registerUser = await User.register(newUser, password)
 
