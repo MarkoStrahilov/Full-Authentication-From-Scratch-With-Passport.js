@@ -1,6 +1,6 @@
 const User = require('../models/user')
 
-module.exports.signIn = async(req, res) => {
+module.exports.deleteUser = async(req, res) => {
     try {
 
         const foundUser = await User.findOne({ _id: req.query.id });
