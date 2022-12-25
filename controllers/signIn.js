@@ -28,8 +28,7 @@ module.exports.signIn = async(req, res, next) => {
 
                     return res.status(403).send({
                         status: 'fail',
-                        message: 'Unable to sign in to your account',
-                        reason: 'Account is not verified, please verify your account in order to use our service'
+                        message: 'Unable to sign in to your account. Account is not verified, please verify your account in order to use our service',
                     });
 
                 } else {

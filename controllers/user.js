@@ -5,11 +5,20 @@ module.exports.deleteUser = async(req, res) => {
 
         const foundUser = await User.findOne({ _id: req.query.id });
 
+        if (!foundUser) {
+
+            return res.status(404).send({
+                status: 'fail',
+                message: "Can't find user"
+            });
+
+        }
+
         if (foundUser.isVerified === false) {
 
             return res.status(400).send({
                 status: 'fail',
-                message: "account is not verified, please verify your account to continue with this action"
+                message: "Account is not verified, please verify your account to continue with this action"
             })
 
         }
@@ -20,7 +29,7 @@ module.exports.deleteUser = async(req, res) => {
 
             return res.status(200).send({
                 status: 'success',
-                message: "account was successfuly deleted"
+                message: "Account was successfuly deleted"
             })
 
         }

@@ -62,7 +62,7 @@ module.exports.register = async(req, res) => {
         res.status(200).send({
             status: 'success',
             message: "please verify your account",
-            data: { otp, link, otpToken, registerUser },
+            data: { link },
         })
 
     } catch (error) {
