@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const passportLocalMongoose = require('passport-local-mongoose')
 const bcrypt = require('bcrypt')
-const crypto = require('crypto')
 
 const Schema = mongoose.Schema;
 
@@ -13,6 +12,18 @@ const userSchema = new Schema({
     isVerified: {
         type: Boolean,
         default: false
+    },
+    isDisabled: {
+        type: Boolean,
+        default: false
+    },
+    messages: [{
+        type: Schema.Types.ObjectId,
+        ref: "Message"
+    }],
+    plan: {
+        type: Schema.Types.ObjectId,
+        ref: "Plan"
     },
     passwordResetToken: String,
     passwordResetExpires: Date

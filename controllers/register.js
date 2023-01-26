@@ -25,15 +25,6 @@ module.exports.register = async(req, res) => {
 
         }
 
-        if (password.indexOf(" ") !== -1) {
-
-            return res.status(400).send({
-                status: "fail",
-                message: 'password',
-            })
-
-        }
-
         const newUser = new User({ email, username })
         const registerUser = await User.register(newUser, password)
 
