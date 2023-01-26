@@ -15,7 +15,7 @@ app.listen(port, () => {
     console.log(`running on port ${port}...`)
 })
 
-mongoose.connect('mongodb://localhost:27017/full-auth', { useNewUrlParser: true, })
+mongoose.connect('mongodb://localhost:27017/sms', { useNewUrlParser: true, })
     .then(() => {
         console.log('database connected')
     }).catch(err => {
