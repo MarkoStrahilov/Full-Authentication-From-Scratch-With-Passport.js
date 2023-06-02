@@ -27,7 +27,4 @@ router.put('/api/v1/validate/password/reset', asyncErrorHandle(resetPassword))
 router.delete("/api/v1/delete/user", asyncErrorHandle(deleteUser))
 router.delete("/api/v1/disable/account", asyncErrorHandle(disableAccount))
 
-// messages routes
-router.post('/api/v1/create/message', asyncErrorHandle(sendMessage))
-
 module.exports = router
