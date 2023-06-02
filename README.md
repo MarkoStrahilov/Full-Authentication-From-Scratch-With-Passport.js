@@ -3,6 +3,7 @@
 **registration / account validation**
 
 registration - /api/v1/register/user ( POST ) 
+
 validation -  /api/v1/register/validation/user ( GET ) 
 
 **sign in / out**
